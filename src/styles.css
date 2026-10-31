@@ -142,3 +142,68 @@
     color: var(--color-foreground);
   }
 }
+
+:root, [data-theme="wedding"] {
+  --background: oklch(0.97 0.02 10);
+  --foreground: oklch(0.25 0.05 10);
+  --primary: oklch(0.65 0.14 10);
+  --primary-foreground: oklch(0.99 0 0);
+  --accent: oklch(0.75 0.1 60);
+  --accent-foreground: oklch(0.25 0.05 10);
+  --muted: oklch(0.93 0.03 10);
+  --muted-foreground: oklch(0.5 0.05 10);
+  --card: oklch(1 0 0 / 0.6);
+  --border: oklch(0.85 0.05 10 / 0.6);
+  --ring: oklch(0.65 0.14 10);
+  --success: oklch(0.62 0.15 150);
+  --cat-1: oklch(0.65 0.14 10); --cat-2: oklch(0.75 0.1 60); --cat-3: oklch(0.7 0.12 340);
+  --cat-4: oklch(0.6 0.09 30); --cat-5: oklch(0.82 0.08 80);
+  --hero: linear-gradient(135deg, oklch(0.88 0.07 10), oklch(0.8 0.1 40), oklch(0.75 0.11 60));
+}
+[data-theme="birthday"] {
+  --background: oklch(0.97 0.02 300);
+  --foreground: oklch(0.22 0.06 300);
+  --primary: oklch(0.55 0.22 300);
+  --accent: oklch(0.72 0.18 50);
+  --muted: oklch(0.93 0.03 300);
+  --muted-foreground: oklch(0.48 0.06 300);
+  --border: oklch(0.82 0.06 300 / 0.6);
+  --ring: oklch(0.55 0.22 300);
+  --cat-1: oklch(0.55 0.22 300); --cat-2: oklch(0.72 0.18 50); --cat-3: oklch(0.65 0.22 350);
+  --cat-4: oklch(0.8 0.15 85); --cat-5: oklch(0.6 0.15 260);
+  --hero: linear-gradient(135deg, oklch(0.55 0.22 300), oklch(0.65 0.22 350), oklch(0.75 0.18 55));
+}
+[data-theme="festival"] {
+  --background: oklch(0.97 0.02 175);
+  --foreground: oklch(0.22 0.05 175);
+  --primary: oklch(0.58 0.12 180);
+  --accent: oklch(0.65 0.17 150);
+  --muted: oklch(0.93 0.03 175);
+  --muted-foreground: oklch(0.45 0.05 175);
+  --border: oklch(0.82 0.06 175 / 0.6);
+  --ring: oklch(0.58 0.12 180);
+  --cat-1: oklch(0.58 0.12 180); --cat-2: oklch(0.65 0.17 150); --cat-3: oklch(0.8 0.15 120);
+  --cat-4: oklch(0.55 0.1 220); --cat-5: oklch(0.82 0.14 95);
+  --hero: linear-gradient(135deg, oklch(0.55 0.12 190), oklch(0.62 0.16 160), oklch(0.75 0.17 135));
+}
+@theme inline {
+  --color-success: var(--success);
+  --color-cat-1: var(--cat-1); --color-cat-2: var(--cat-2); --color-cat-3: var(--cat-3);
+  --color-cat-4: var(--cat-4); --color-cat-5: var(--cat-5);
+  --font-display: "Fraunces", serif;
+  --font-sans: "Outfit", sans-serif;
+}
+body { font-family: var(--font-sans); transition: background-color .5s; }
+@utility glass {
+  background: var(--card);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 40px -15px color-mix(in oklab, var(--primary) 35%, transparent);
+  border-radius: 1.25rem;
+}
+@utility bg-hero { background: var(--hero); }
+@keyframes floaty { 0%,100% { transform: translateY(0) rotate(0) } 50% { transform: translateY(-18px) rotate(15deg) } }
+@utility animate-floaty { animation: floaty 5s ease-in-out infinite; }
+@keyframes burst { 0% { transform: translate(0,0) scale(1); opacity: 1 } 100% { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0 } }
+@utility animate-burst { animation: burst .8s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) { .animate-floaty, .animate-burst { animation: none } }
