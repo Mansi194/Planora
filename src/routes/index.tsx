@@ -150,11 +150,11 @@ function Index() {
             </div>
             <div className="mt-5 flex h-5 overflow-hidden rounded-full bg-muted" role="img" aria-label="Spending allocation">
               {alloc.map((v, i) => (
-                <div key={i} className={`${CATS[i].color} transition-all`} style={{ width: `${(v / Math.max(spent, cfg.budget)) * 100}%` }} title={`${CATS[i].name} ${Math.round((v / cfg.budget) * 100)}%`} />
+                <div key={i} className={`${CATS[i]!.color} transition-all`} style={{ width: `${(v / Math.max(spent, cfg.budget)) * 100}%` }} title={`${CATS[i]!.name} ${Math.round((v / cfg.budget) * 100)}%`} />
               ))}
             </div>
             <div className="mt-2 flex flex-wrap gap-3 text-xs">
-              {CATS.map((c, i) => <span key={c.name} className="flex items-center gap-1"><span className={`size-2.5 rounded-full ${c.color}`} />{c.name} {Math.round((alloc[i] / cfg.budget) * 100)}%</span>)}
+              {CATS.map((c, i) => <span key={c.name} className="flex items-center gap-1"><span className={`size-2.5 rounded-full ${c.color}`} />{c.name} {Math.round((alloc[i]! / cfg.budget) * 100)}%</span>)}
             </div>
             <div className="mt-6 space-y-4">
               {CATS.map((c, i) => {
@@ -163,9 +163,9 @@ function Index() {
                   <div key={c.name}>
                     <div className="flex justify-between text-sm">
                       <label htmlFor={`s${i}`} className="flex items-center gap-2 font-medium"><I className="size-4 text-primary" aria-hidden />{c.name}</label>
-                      <span className="font-semibold tabular-nums">{fmt(alloc[i])}</span>
+                      <span className="font-semibold tabular-nums">{fmt(alloc[i]!)}</span>
                     </div>
-                    <input id={`s${i}`} type="range" min={0} max={Math.round(cfg.budget * 0.6)} step={cfg.budget / 300} value={alloc[i]}
+                    <input id={`s${i}`} type="range" min={0} max={Math.round(cfg.budget * 0.6)} step={cfg.budget / 300} value={alloc[i]!}
                       onChange={(e) => setAlloc((a) => a.map((x, j) => (j === i ? +e.target.value : x)))}
                       className="mt-1 w-full accent-primary" />
                   </div>
@@ -197,7 +197,7 @@ function Index() {
                         <span className={t.done ? "line-through text-muted-foreground" : ""}>{t.t}</span>
                       </button>
                       {burst === t.id && Array.from({ length: 10 }).map((_, k) => (
-                        <span key={k} aria-hidden className={`animate-burst pointer-events-none absolute left-4 top-4 size-2 rounded-full ${CATS[k % 5].color}`}
+                        <span key={k} aria-hidden className={`animate-burst pointer-events-none absolute left-4 top-4 size-2 rounded-full ${CATS[k % 5]!.color}`}
                           style={{ ["--dx" as string]: `${Math.cos(k * 0.63) * 40}px`, ["--dy" as string]: `${Math.sin(k * 0.63) * 40}px` }} />
                       ))}
                     </li>
