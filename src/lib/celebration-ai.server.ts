@@ -1,9 +1,9 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { APICallError, streamText } from "ai";
 import type { AiRequest } from "./ai-schemas";
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId, withLovableAiGatewayRunIdHeader } from "./run-id.server";
 
-export function streamCelebrationAi(request: Request, input: AiRequest, apiKey: string) {
+export async function streamCelebrationAi(request: Request, input: AiRequest, apiKey: string) {
   const runIdFetch = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
   const provider = createOpenAI({
     baseURL: "https://ai.gateway.lovable.dev/v1",
@@ -24,6 +24,7 @@ export function streamCelebrationAi(request: Request, input: AiRequest, apiKey: 
     instructions,
     messages: [{ role: "user", content: prompt }],
     abortSignal: request.signal,
+    maxRetries: 0,
     providerOptions: {
       openai: {
         forceReasoning: true,
@@ -35,5 +36,37 @@ export function streamCelebrationAi(request: Request, input: AiRequest, apiKey: 
     },
     onError: ({ error }) => console.error("Celebration AI failed", error),
   });
-  return withLovableAiGatewayRunIdHeader(result.toTextStreamResponse(), runIdFetch);
+  const safeError = (error: unknown) => {
+    if (APICallError.isInstance(error) && error.responseBody) {
+      try {
+        const body = JSON.parse(error.responseBody);
+        const message = body.error?.message ?? body.message;
+        if (typeof message === "string") return message;
+      } catch { /* Use a safe fallback for non-JSON failures. */ }
+    }
+    return "AI could not complete this request. Please start a new request later.";
+  };
+  const iterator = result.fullStream[Symbol.asyncIterator]();
+  let first = await iterator.next();
+  while (!first.done && first.value.type !== "text-delta" && first.value.type !== "error") first = await iterator.next();
+  if (!first.done && first.value.type === "error") {
+    const error = first.value.error;
+    return Response.json({ error: safeError(error) }, { status: request.signal.aborted ? 499 : APICallError.isInstance(error) ? error.statusCode ?? 500 : 500 });
+  }
+  const encoder = new TextEncoder();
+  const body = new ReadableStream({
+    async start(controller) {
+      try {
+        let next = first;
+        while (!next.done) {
+          const part = next.value;
+          if (part.type === "text-delta") controller.enqueue(encoder.encode(JSON.stringify({ text: part.text }) + "\n"));
+          if (part.type === "error") { controller.enqueue(encoder.encode(JSON.stringify({ error: safeError(part.error) }) + "\n")); break; }
+          next = await iterator.next();
+        }
+      } finally { controller.close(); }
+    },
+    cancel: () => iterator.return?.(),
+  });
+  return withLovableAiGatewayRunIdHeader(new Response(body, { headers: { "Content-Type": "application/x-ndjson", "Cache-Control": "no-store" } }), runIdFetch);
 }

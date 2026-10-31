@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Copy, Loader2, Mail, Send, Sparkles, Square, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -38,12 +38,10 @@ export function CelebrationIdeas({ eventType }: { eventType: EventType }) {
 export function NegotiationModal({ vendor, eventType, onClose }: { vendor: NegotiationVendor | null; eventType: EventType; onClose: () => void }) {
   const ai = useCelebrationAi();
   const [copied, setCopied] = useState(false);
-  // The parent keys this modal by vendor, so each draft starts fresh.
-  const [started, setStarted] = useState(false);
-  if (vendor && !started) {
-    setStarted(true);
-    void ai.generate({ kind: "negotiate", vendorName: vendor.name, category: vendor.type, price: vendor.cost, eventType });
-  }
+  useEffect(() => {
+    if (vendor) void ai.generate({ kind: "negotiate", vendorName: vendor.name, category: vendor.type, price: vendor.cost, eventType });
+    // Each vendor opens a separately keyed modal with its own request.
+  }, []);
   return <Dialog open={Boolean(vendor)} onOpenChange={(open) => { if (!open) { ai.stop(); onClose(); } }}>
     <DialogContent className="max-h-[85dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-lg">
       <DialogHeader>
