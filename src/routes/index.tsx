@@ -82,7 +82,7 @@ function Index() {
           {(Object.keys(MODES) as Mode[]).map((m) => {
             const I = MODES[m].icon; const active = m === mode;
             return (
-              <Button key={m} role="tab" aria-selected={active} onClick={() => switchMode(m)}
+              <Button variant="ghost" key={m} role="tab" aria-selected={active} onClick={() => switchMode(m)}
                 className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "bg-primary text-primary-foreground shadow" : "hover:bg-muted"}`}>
                 <I className="size-4" aria-hidden /> {MODES[m].label}
               </Button>
@@ -161,7 +161,7 @@ function Index() {
                 <ul className="mt-1 space-y-1">
                   {tasks.filter((t) => t.m === m).map((t) => (
                     <li key={t.id} className="relative">
-                      <Button role="checkbox" aria-checked={t.done} onClick={() => toggle(t.id)}
+                      <Button variant="ghost" role="checkbox" aria-checked={t.done} onClick={() => toggle(t.id)}
                         className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                         {t.done ? <CheckCircle2 className="size-5 text-primary" /> : <Circle className="size-5 text-muted-foreground" />}
                         <span className={t.done ? "line-through text-muted-foreground" : ""}>{t.t}</span>
@@ -183,7 +183,7 @@ function Index() {
             <h2 id="v-h" className="font-display text-2xl font-bold">Vendors</h2>
             <div role="tablist" aria-label="Filter vendors" className="flex gap-1 rounded-full bg-muted p-1">
               {(["All", "Booked", "Pending", "Inquiry"] as const).map((f) => (
-                <Button key={f} role="tab" aria-selected={filter === f} onClick={() => setFilter(f)}
+                <Button variant="ghost" key={f} role="tab" aria-selected={filter === f} onClick={() => setFilter(f)}
                   className={`rounded-full px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${filter === f ? "bg-primary text-primary-foreground" : ""}`}>{f}</Button>
               ))}
             </div>
