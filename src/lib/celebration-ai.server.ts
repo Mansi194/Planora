@@ -64,9 +64,11 @@ export async function streamCelebrationAi(request: Request, input: AiRequest, ap
           if (part.type === "error") { controller.enqueue(encoder.encode(JSON.stringify({ error: safeError(part.error) }) + "\n")); break; }
           next = await iterator.next();
         }
+      } catch (error) {
+        controller.enqueue(encoder.encode(JSON.stringify({ error: safeError(error) }) + "\n"));
       } finally { controller.close(); }
     },
-    cancel: () => iterator.return?.(),
+    cancel: async () => { await iterator.return?.(); },
   });
   return withLovableAiGatewayRunIdHeader(new Response(body, { headers: { "Content-Type": "application/x-ndjson", "Cache-Control": "no-store" } }), runIdFetch);
 }

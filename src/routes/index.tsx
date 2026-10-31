@@ -1,5 +1,6 @@
 import { CelebrationIdeas, NegotiationModal, type NegotiationVendor } from "@/components/celebration-ai";
 import { Button } from "@/components/ui/button";
+import { budgetTotals, toggleTask } from "@/lib/planning-totals";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
@@ -62,15 +63,14 @@ function Index() {
   const [burst, setBurst] = useState<number | null>(null);
 
   const cfg = MODES[mode];
-  const spent = alloc.reduce((a, b) => a + b, 0);
-  const remaining = cfg.budget - spent;
+   const { spent, remaining } = budgetTotals(alloc, cfg.budget);
   const done = tasks.filter((t) => t.done).length;
   const pct = Math.round((done / tasks.length) * 100);
   const vendors = useMemo(() => VENDORS.filter((v) => filter === "All" || v.status === filter), [filter]);
 
   const switchMode = (m: Mode) => { setMode(m); setAlloc(MODES[m].alloc); setSelectedVendor(null); };
   const toggle = (id: number) => {
-    setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+    setTasks((ts) => toggleTask(ts, id));
     if (!tasks.find((t) => t.id === id)?.done) { setBurst(id); setTimeout(() => setBurst(null), 850); }
   };
 
