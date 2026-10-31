@@ -1,0 +1,3 @@
+- [ ] Add validated, streamed AI recommendations at the top of the dashboard.
+- [ ] Add vendor-specific negotiation email modal.
+- [ ] Verify live budget allocation and six-task completion updates.
