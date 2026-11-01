@@ -1,24 +1,30 @@
-# Screenshot Perfect
+# Planora
 
-Implement exactly the screenshot and nothing else
+An intelligent planning and scheduling web application built for the Hack2Skill hackathon. Planora helps users streamline their tasks, manage event budgets, and organize schedules efficiently with robust input validation.
 
-This project was built with [Lovable](https://lovable.dev).
+## ✨ Features
+- **Smart Prompt & Input Validation:** Implemented strict security and validation using Zod (`src/lib/validations.ts`) to handle user inputs safely.
+- **Event Budget Management:** Easily track category names, allocated amounts, and limits.
+- **Interactive UI:** Built with modern web technologies for a seamless user experience.
 
-## Build with Lovable
+## 🚀 Tech Stack
+- **Frontend/Framework:** TanStack Start / Vite / React / TypeScript
+- **Styling:** Tailwind CSS
+- **Validation:** Zod
+- **Backend/Database:** Supabase & Drizzle ORM
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/280e3bb9-a0d8-4db7-a0c6-d61a80084575).
+## 🛠️ Getting Started Locally
+To run this project on your local machine:
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Mansi194/Planora.git
+   Navigate to the project directory:
+   ```bash
+   cd Planora
+   Install dependencies:
+   ```bash
+   npm i
+   Run the development server:
+   ```bash
+   npm run dev
